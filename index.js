@@ -1,15 +1,13 @@
-const http = require('http');
+const http  = require('http');
 const https = require('https');
-const url = require('url');
-const fs = require('fs');
+const url   = require('url');
+const fs    = require('fs');
 const StringDecoder = require('string_decoder').StringDecoder;
 
-let config = require('./config');
-let _data = require('./lib/data');
-
-_data.delete('test', 'newFile', function (err) {
-	console.log(`Error occured is ${err}`);
-});
+let config   = require('./lib/config');
+let _data    = require('./lib/data');
+let handlers = require('./lib/handlers');
+let helpers = require('./lib/helpers');
 
 let httpsServerOptions = {
 	'key' : fs.readFileSync('./https/key.pem'),
@@ -60,7 +58,7 @@ let unifiedServer = function (req, res) {
 			queryStringObject,
 			method,
 			headers,
-			payload: buffer
+			payload: helpers.parseJsonToObject(buffer)
 		};
 
 		// Route the request to the handler specified in the router
@@ -87,24 +85,9 @@ let unifiedServer = function (req, res) {
 
 }
 
-
-
-//Define the Handler
-var handlers = {};
-
-//Define Sample Handler
-handlers.ping = function(data, callback) {
-	//Callback a http Status Code and a payload object
-	callback(200);
-}
-
-// Define Not Found Handler
-handlers.notFound = function(data, callback) {
-	callback(404);
-}
-
 //Define a request router
 var router = {
-	'ping' : handlers.ping
+	'ping' : handlers.ping,
+	'users': handlers.users
 };
 
