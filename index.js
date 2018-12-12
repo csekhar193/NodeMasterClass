@@ -9,6 +9,10 @@ let _data    = require('./lib/data');
 let handlers = require('./lib/handlers');
 let helpers = require('./lib/helpers');
 
+helpers.sendTwilioSms('8500974967', 'hi venky', function (err) {
+	console.log(err);
+}); 
+
 let httpsServerOptions = {
 	'key' : fs.readFileSync('./https/key.pem'),
 	'cert' : fs.readFileSync('./https/cert.pem'),
